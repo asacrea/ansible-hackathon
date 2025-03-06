@@ -1,0 +1,45 @@
+- name: Instalar Slurm y dependencias
+  apt:
+    name:
+      - slurm-wlm
+      - slurm-client
+      - slurmctld
+      - slurmd
+      - munge
+      - libmunge-dev
+    state: present
+    update_cache: yes
+
+- name: Configurar el servicio Munge
+  systemd:
+    name: munge
+    enabled: yes
+    state: started
+
+- name: Crear el archivo de configuración de Slurm
+  template:
+    src: slurm.conf.j2
+    dest: /etc/slurm/slurm.conf
+  notify: Reiniciar Slurm
+
+- name: Habilitar y arrancar Slurm
+  systemd:
+    name: slurmctld
+    enabled: yes
+    state: started
+
+- name: Iniciar slurmd en cada nodo
+  systemd:
+    name: slurmd
+    enabled: yes
+    state: started
+
+- name: Verificar el estado de Slurm
+  command: sinfo
+  register: slurm_status
+  changed_when: false
+
+- name: Mostrar el estado de Slurm
+  debug:
+    msg: "Estado de Slurm: {{ slurm_status.stdout }}"
+

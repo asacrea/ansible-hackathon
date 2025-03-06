@@ -1,0 +1,8 @@
+- name: Configurar clúster de 10 nodos
+  hosts: all
+  become: yes
+  roles:
+    - conda
+    - docker
+    - nextflow
+    - slurm

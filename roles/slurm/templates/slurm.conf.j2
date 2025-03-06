@@ -1,0 +1,20 @@
+# Slurm Configuration File - Generado con Ansible
+
+ClusterName=mi_cluster
+SlurmctldHost={{ groups['all'][0] }}  # Nodo controlador del clúster
+
+# Configuración general
+SlurmctldPort=6817
+SlurmdPort=6818
+AuthType=auth/munge
+CryptoType=crypto/munge
+StateSaveLocation=/var/spool/slurm/state
+SlurmdSpoolDir=/var/spool/slurm/slurmd
+SlurmUser=slurm
+SlurmdUser=root
+LogFile=/var/log/slurm/slurm.log
+SlurmdLogFile=/var/log/slurm/slurmd.log
+
+# Configuración de nodos
+NodeName={{ inventory_hostname }} CPUs={{ hostvars[inventory_hostname]['cpus'] | default(4) }} RealMemory={{ hostvars[inventory_hostname]['memory'] | default(8000) }} State=UNKNOWN
+PartitionName=default Nodes=nodo[1-10] Default=YES MaxTime=INFINITE State=UP

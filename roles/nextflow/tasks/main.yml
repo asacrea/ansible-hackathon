@@ -1,0 +1,14 @@
+- name: Descargar Nextflow
+  get_url:
+    url: https://get.nextflow.io
+    dest: /usr/local/bin/nextflow
+    mode: '0755'
+
+- name: Verificar la instalación de Nextflow
+  command: nextflow -v
+  register: nextflow_version
+  changed_when: false
+
+- name: Mostrar la versión de Nextflow instalada
+  debug:
+    msg: "Nextflow versión: {{ nextflow_version.stdout }}"
